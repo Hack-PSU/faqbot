@@ -22,4 +22,4 @@ RUN mkdir -p store
 
 EXPOSE 8114
 
-CMD ["python", "app.py"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8114", "--workers", "1", "--preload", "app:app"]

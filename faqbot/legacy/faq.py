@@ -18,4 +18,41 @@ The HackPSU Team
         """,
         "from_email": "sponsorship@hackpsu.org"
     },
+    "travel": {
+        "body": """
+Hi there,<br><br>
+
+Thank you for reaching out about travel reimbursement for HackPSU!<br><br>
+
+Here's a quick summary of our travel reimbursement policy:<br><br>
+
+<b>Maximum Reimbursement:</b> $110 per participant<br><br>
+
+<b>Eligible Travel Methods:</b> Bus, plane, ride-sharing (Uber/Lyft), taxi, rental vehicle, and personal vehicle (gas expenses).<br><br>
+
+<b>Receipt Requirements:</b><br>
+&bull; Original receipts must be provided at the event<br>
+&bull; Digital receipts are accepted for the arrival trip only<br>
+&bull; Verification of initial departure point is required<br>
+&bull; Only the person named on the receipt can be reimbursed<br>
+&bull; Receipts cannot be split among a group &mdash; each participant must have their own<br><br>
+
+<b>How to Submit:</b> Upload your receipts via the reimbursement page at the bottom of your profile page by clicking the "Submit Reimbursement" button.<br><br>
+
+<b>Processing Time:</b> Reimbursements may take up to 2 months to process after the event.<br><br>
+
+<b>What's NOT Covered:</b><br>
+&bull; Travel from the State College area<br>
+&bull; Local transportation within State College<br>
+&bull; Lodging, hotel, or other accommodation expenses<br><br>
+
+For full details, please visit our travel reimbursement policy at <a href="https://hackpsu.org/travel">hackpsu.org/travel</a>.<br><br>
+
+If you have any other questions, feel free to reach out to us at team@hackpsu.org.<br><br>
+
+Best,<br>
+The HackPSU Team
+        """,
+        "from_email": ""
+    },
 }

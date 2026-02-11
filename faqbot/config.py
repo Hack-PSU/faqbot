@@ -32,3 +32,6 @@ FOOTER = os.environ.get("FOOTER", """
 """).format(from_addr=MAIL_FROM)
 
 TRIGGERS = os.environ.get("TRIGGERS", "@faqbot,@fb").split(",")
+
+# HackPSU API
+HACKPSU_API_KEY = os.environ["HACKPSU_API_KEY"]

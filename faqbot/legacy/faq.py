@@ -1,105 +1,21 @@
-FAQ = """
-    <b> Interesting FAQ Stuff Here </b>
-"""
-
 COMMANDS = {
-    "edu": {
+    "judging": {
         "body": """
+Good afternoon,<br><br>
 
-    Hi! <br><br>
+Thank you so much for your interest in HackPSU! We value your expertise and enthusiasm, which is why we would love to have you involved as a judge. However, judging opportunities are exclusively available to our event sponsors.<br><br>
 
-    You need to be an enrolled undergraduate as of September 15th to participate in HackMIT. We can whitelist your email if you send us some proof of admission and enrollment. This is usually a picture of your student ID. <br><br>
+We offer various sponsorship tiers to fit different levels of commitment and involvement. We would be delighted to discuss these options with you and tailor a package that aligns with your company's goals and interests.<br><br>
 
-    If your college provides you with an educational email, we can whitelist the entire domain so that you and your classmates can register for HackMIT. <br><br>
+We would love to have you participate in our upcoming spring hackathon, scheduled for March 28-29. We confidently believe that our talented students would be excited to connect with you and your company, giving you a unique opportunity to engage with and recruit top talent from Penn State. In previous years, our in-person events attracted over 400 students. We expect to see an even greater turnout this semester.<br><br>
 
-    Thank you for your interest!<br><br>
+Please let us know if you would be interested in exploring this opportunity further. We are happy to provide additional details and answer any questions you may have. Please feel free to contact us at sponsorship@hackpsu.org for any inquiries or comments. We are genuinely so excited about the potential partnership with your company to make HackPSU an extraordinary success!<br><br>
 
-    Best,<br>
-    Hackbot
+Thank you for your time and consideration. We look forward to hearing back from you!<br><br>
 
-    """,
-        "from_email": ""
-    },
-    "whitelist": {
-        "body": """
-
-    Hi! <br><br>
-
-    We've whitelisted the email address {email}. You can now use this for registration! <br><br>
-
-    Best,<br>
-    Hackbot
-
-    """,
-        "from_email": ""
-    },
-    "mixed": {
-        "body": """
-
-    Hi! <br><br>
-
-    Thanks for reaching out! We get this question a lot, and it's quite common for teams to be mixed MIT/non-MIT. <br><br>
-
-    The MIT students will be guaranteed a spot at HackMIT, while the rest of the team will be admitted as a unit via our admission process (although not guaranteed admission). There's nothing special other than having each person join the same team in our registration system! <br><br>
-
-    Hope that helps,<br>
-    Hackbot
-
-    """,
-        "from_email": ""
-    },
-    "lateteam": {
-        "body": """
-    Hi, <br><br>
-
-    Thanks for reaching out! Unfortunately registration is now closed and we cannot make changes to teams. The good news is this only affects admissions. So, if everyone gets admitted, you are welcome to hack together at the event! <br><br>
-
-    Cheers,<br>
-    Hackbot
-    """,
-        "from_email": ""
-    },
-    "latereg": {
-        "body": """
-    Hi, <br><br>
-
-    Thanks for reaching out! Unfortunately registration is now closed. We had 24-hour grace period for stragglers, but now that that period is over, we have begun the admissions process and cannot accept any more applications. <br><br>
-
-    If you are in the Boston area, you are welcome to show up early on the morning of the event to attempt walk-on admission. Walk on tends to be crowded and are not guaranteed, so make sure to arrive early with your government and student IDs! <br><br>
-
-    Otherwise, look out for applications to HackMIT 2019 next year!<br><br>
-
-    Cheers,<br>
-    Hackbot
-    """,
-        "from_email": ""
-    },
-    "lateconfirm": {
-        "body": """
-    Hi, <br><br>
-
-    Thanks for reaching out! Unfortunately the deadline for confirming your acceptance to HackMIT has passed. We had much more interest in HackMIT than we have space, so unfortunately cannot allow you to confirm your acceptance late. Sorry about that!<br><br>
-
-    If you are in the Boston area, you are welcome to show up early on the morning of the event to attempt walk-on admission. Walk on tends to be crowded and are not guaranteed, so make sure to arrive early with your government and student IDs! <br><br>
-
-    Otherwise, look out for applications to HackMIT 2019 next year!<br><br>
-
-    Cheers,<br>
-    Hackbot
-    """,
-        "from_email": ""
-    },
-    "travel": {
-        "body": """
-    Hi there,<br><br>
-
-    We're processing travel reimbursements right now!<br>
-    If you received an email confirming your reimbursement, you're all set.
-    We'll email out when we mail all the checks.<br><br>
-
-    Best,<br>
-    Hackbot
-    """,
-        "from_email": ""
+Best,<br>
+The HackPSU Team
+        """,
+        "from_email": "sponsorship@hackpsu.org"
     },
 }

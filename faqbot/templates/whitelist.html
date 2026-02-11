@@ -14,13 +14,23 @@
 
 <br><br>
 
-<form class="ui form skinny" action="/whitelist/api/config" method="POST">
-    <div class="field">
-        <label>Whitelisted Emails (one per line)</label>
-        <textarea name="whitelist">{{'\n'.join(c['whitelist'])}}</textarea>
-    </div>
-    <button class="ui button" type="submit">Save</button>
-</form>
+<p>Only active HackPSU organizers (from the API) and the bot email can trigger faqbot.</p>
+
+<table class="ui celled padded table wd">
+    <thead>
+        <tr>
+            <th>Active Organizer Emails</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for email in organizers %}
+        <tr>
+            <td>{{ email }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}
 
 {% block js %}

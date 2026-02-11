@@ -1,6 +1,6 @@
 *.DS_Store
 .vscode/
-config.py
+.env
 config_server.py
 defaults.py
 *.pyc

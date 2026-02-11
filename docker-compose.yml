@@ -3,7 +3,8 @@ services:
     build: .
     ports:
       - "8114:8114"
+    env_file:
+      - .env
     volumes:
       - ./store:/app/store
-      - ./faqbot/config.py:/app/faqbot/config.py:ro
     restart: unless-stopped

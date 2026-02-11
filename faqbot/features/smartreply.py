@@ -20,7 +20,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
-from sklearn.externals import joblib
+import joblib
 import numpy as np
 import pickle
 import os
@@ -75,32 +75,44 @@ def collect_data():
     result, data = mail.search(None, '(BODY "%s")' % ("@faqbot"))
 
     ids = data[0]
+    if isinstance(ids, bytes):
+        ids = ids.decode()
     id_list = ids.split()
 
     for idx, r_id in enumerate(id_list):
         _, data = mail.fetch(r_id, "(RFC822)")
 
-        print "%i / %i (%i%%)" % (idx, len(id_list), int(float(idx) / len(id_list) * 100))
+        print("%i / %i (%i%%)" % (idx, len(id_list), int(float(idx) / len(id_list) * 100)))
 
-        raw_email = "null"
+        raw_email = None
         for d in data:
             if type(d) is tuple:
-                if "RFC822" in d[0]:
+                header = d[0]
+                if isinstance(header, bytes):
+                    header = header.decode()
+                if "RFC822" in header:
                     raw_email = d[1]
+
+        if raw_email is None:
+            continue
+
+        # Decode bytes from IMAP
+        if isinstance(raw_email, bytes):
+            raw_email = raw_email.decode('utf-8', errors='replace')
 
         flanker_msg = mime.from_string(raw_email)
 
-        body = "null"
+        body = None
 
         try:
             for part in flanker_msg.parts:
                 if str(part) == "(text/plain)":
-                    pp = part.body.encode('ascii', 'ignore')
+                    pp = part.body.encode('ascii', 'ignore').decode('ascii')
                     body = pp
         except Exception as _:
             pass
 
-        if body == "null":
+        if body is None:
             continue
 
         parsed_body = EmailReplyParser.read(body)
@@ -133,12 +145,12 @@ def train_model():
     """
     data = load_config('smartreply_data')
     # data = [d for d in data if d[0] != 'whitelist']
-    
+
     X = [d[1] for d in data]
     Y = [d[0] for d in data]
 
     text_clf_svm = Pipeline([('vect', CountVectorizer(stop_words='english')), ('tfidf', TfidfTransformer()),
-                            ('clf-svm', SGDClassifier(loss='log', penalty='l2',alpha=1e-3, n_iter=5, random_state=42))])
+                            ('clf-svm', SGDClassifier(loss='log_loss', penalty='l2',alpha=1e-3, max_iter=5, random_state=42))])
 
     text_clf_svm = text_clf_svm.fit(X, Y)
     joblib.dump(text_clf_svm, MODEL_LOC)
@@ -152,26 +164,26 @@ class SmartReply(Feature):
 
     @staticmethod
     def raw_callback(parsed, raw, reply_object):
-        print "[SR] Smartreply Callback!"
+        print("[SR] Smartreply Callback!")
         with Store(STORE) as s:
             if not s['enabled']:
                 return
 
-            body = "null"
+            body = None
             for part in parsed.parts:
                 if str(part) == "(text/plain)":
-                    body = part.body.encode('ascii', 'ignore')
+                    body = part.body.encode('ascii', 'ignore').decode('ascii')
 
-            print "[SR] Parsed body to:", body
+            print("[SR] Parsed body to:", body)
 
-            if body == "null":
+            if body is None:
                 return
 
             body = EmailReplyParser.parse_reply(body)
 
             email_message = email.message_from_string(raw)
 
-            print "[SR] To", email_message['To']
+            print("[SR] To", email_message['To'])
 
             sent_to = None
 
@@ -189,7 +201,7 @@ class SmartReply(Feature):
 
             templates = load_config('templates')['templates']
 
-            print "[SR] Confidence %.2f, Class: %s" % (confidence, class_)
+            print("[SR] Confidence %.2f, Class: %s" % (confidence, class_))
 
             if confidence > float(s['threshold']) and class_ in templates:
                 if s['mock']:

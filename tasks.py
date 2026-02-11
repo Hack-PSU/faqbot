@@ -18,4 +18,4 @@ if __name__ == "__main__":
     if args.train:
         train_model()
 
-    print "All Done!"
+    print("All Done!")

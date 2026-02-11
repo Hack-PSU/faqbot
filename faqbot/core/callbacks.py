@@ -29,7 +29,7 @@ def triggered_email(body, argv, reply_object):
         try:
             f.triggered_callback(body, argv, reply_object)
         except Exception as e:
-            print traceback.format_exc()
+            print(traceback.format_exc())
 
 def raw_email(parsed, raw, reply_object):
     """If no trigger is found, this routine is fired.
@@ -43,4 +43,4 @@ def raw_email(parsed, raw, reply_object):
         try:
             f.raw_callback(parsed, raw, reply_object)
         except Exception as e:
-            print traceback.format_exc()
+            print(traceback.format_exc())

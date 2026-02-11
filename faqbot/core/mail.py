@@ -6,7 +6,7 @@ the callbacks.
 """
 
 '''
-    This was written by Shreyas Kapur in collaboration with 
+    This was written by Shreyas Kapur in collaboration with
     Michael Kaminsky
     https://github.com/mkaminsky11
 '''
@@ -67,7 +67,7 @@ class Idler(object):
 
     # The method that gets called when a new email arrives.
     def dosync(self):
-        print "You\'ve Got Mail."
+        print("You've Got Mail.")
         did_except = True
         while did_except:
             try:
@@ -76,20 +76,22 @@ class Idler(object):
             except:
                 # Attempt reconnect
                 did_except = True
-                print "Disconnected, attempting reconnect."
+                print("Disconnected, attempting reconnect.")
                 self.mail = imaplib2.IMAP4_SSL(IMAP_SERVER)
                 self.mail.login(MAIL_USER, MAIL_PASSWORD)
 
                 self.mail.select("inbox", readonly=True)
 
         ids = data[0]
+        if isinstance(ids, bytes):
+            ids = ids.decode()
         id_list = ids.split()
         new_mail_ids = []
 
         if id_list[-1] < self.last_id:
             new_mail_ids = []
         else:
-            for i in xrange(len(id_list)-1, 0, -1):
+            for i in range(len(id_list)-1, 0, -1):
                 if id_list[i] == self.last_id:
                     break
                 else:
@@ -99,34 +101,48 @@ class Idler(object):
         for mail_id in new_mail_ids:
             _, data = self.mail.fetch(mail_id, "(RFC822)")
 
-            raw_email = "null"
+            raw_email = None
             for d in data:
                 if type(d) is tuple:
-                    if "RFC822" in d[0]:
+                    header = d[0]
+                    if isinstance(header, bytes):
+                        header = header.decode()
+                    if "RFC822" in header:
                         raw_email = d[1]
 
-            if raw_email == "null":
+            if raw_email is None:
                 continue
 
-            email_message = email.message_from_string(raw_email)
-            flanker_msg = mime.from_string(raw_email)
+            # In Python 3, IMAP returns bytes. Keep bytes for DKIM, decode for string ops.
+            if isinstance(raw_email, bytes):
+                raw_email_bytes = raw_email
+                raw_email_str = raw_email.decode('utf-8', errors='replace')
+            else:
+                raw_email_str = raw_email
+                raw_email_bytes = raw_email.encode('utf-8')
 
-            body = "null"
+            email_message = email.message_from_bytes(raw_email_bytes)
+            flanker_msg = mime.from_string(raw_email_str)
+
+            body = None
 
             try:
                 for part in flanker_msg.parts:
-                    pp = part.body.encode('ascii', 'ignore')
+                    pp = part.body.encode('ascii', 'ignore').decode('ascii')
                     if start_trigger(pp, TRIGGERS):
                         body = pp
                         break
             except Exception as _:
                 pass
 
-            # If body is still null, just look for this stuff
-            if body == "null":
-                for l in raw_email.split('\n'):
+            # If body is still None, just look for this stuff
+            if body is None:
+                for l in raw_email_str.split('\n'):
                     if start_trigger(l, TRIGGERS):
                         body = l
+
+            if body is None:
+                continue
 
             # CR-LF ugh
             body = body.replace('\r', '')
@@ -138,20 +154,20 @@ class Idler(object):
             reply_object = {
                 'subject': email_message["Subject"],
                 'all_recipients': all_recipients,
-                'raw_email': raw_email,
+                'raw_email': raw_email_str,
                 'msg_id': email_message["Message-ID"]
             }
 
-            if start_trigger(body, TRIGGERS) and "From" in email_message and is_whitelisted(raw_email):
-                print "Request from {} for subject {}.".format(email_message["From"], email_message["Subject"])
-                
+            if start_trigger(body, TRIGGERS) and "From" in email_message and is_whitelisted(raw_email_bytes):
+                print("Request from {} for subject {}.".format(email_message["From"], email_message["Subject"]))
+
                 argv = [x.strip() for x in body.split()]
                 callbacks.triggered_email(body, argv, reply_object)
             else:
-                callbacks.raw_email(flanker_msg, raw_email, reply_object)
+                callbacks.raw_email(flanker_msg, raw_email_str, reply_object)
 
 def start_mail_thread():
-    print "Starting mail thread!"
+    print("Starting mail thread!")
     # Set the following two lines to your creds and server
     mail = imaplib2.IMAP4_SSL(*IMAP_SERVER)
     mail.login(MAIL_USER, MAIL_PASSWORD)
@@ -161,13 +177,15 @@ def start_mail_thread():
     result, data = mail.search(None, "ALL")
 
     ids = data[0]
+    if isinstance(ids, bytes):
+        ids = ids.decode()
     id_list = ids.split()
     latest_email_id = id_list[-1]
 
     idler = Idler(mail, latest_email_id)
     idler.start()
 
-    print "Client started on {}, waiting for emails.".format(MAIL_USER)
+    print("Client started on {}, waiting for emails.".format(MAIL_USER))
 
     # # while True:
     # #     try:

@@ -26,7 +26,7 @@ If you run a hackathon and use HackMIT's quill registration system, faqbot comes
 
 ## Setup
 
-Use Python 2.7,
+Use Python 3.11+,
 
 Resolve dependencies,
 

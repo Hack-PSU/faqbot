@@ -20,6 +20,10 @@
         <input type="text" name="key" placeholder="Like 'edu' or 'travel'">
     </div>
     <div class="field">
+        <label>From Email (leave blank for default)</label>
+        <input type="email" name="from_email" placeholder="e.g. sponsorship@hackpsu.org">
+    </div>
+    <div class="field">
         <label>Value</label>
         <textarea name="value"></textarea>
     </div>
@@ -32,6 +36,7 @@
     <thead>
         <tr>
             <th class="single line">Key</th>
+            <th>From</th>
             <th>Value</th>
             <th>Delete</th>
         </tr>
@@ -43,7 +48,18 @@
                 <b>{{ key }}</b>
             </td>
             <td>
-                {{ value }}
+                {% if value is mapping and value.from_email %}
+                    {{ value.from_email }}
+                {% else %}
+                    <i>default</i>
+                {% endif %}
+            </td>
+            <td>
+                {% if value is mapping %}
+                    {{ value.body }}
+                {% else %}
+                    {{ value }}
+                {% endif %}
             </td>
             <td>
                 <a href="/templates/delete/{{ key }}">

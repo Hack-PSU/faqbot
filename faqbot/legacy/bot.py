@@ -1,25 +1,25 @@
 '''
-    This was written by Shreyas Kapur in collaboration with 
+    This was written by Shreyas Kapur in collaboration with
     Michael Kaminsky
     https://github.com/mkaminsky11
 '''
 
-from config import *
+from faqbot.config import *
 #from faq import *
-import quill
+from faqbot.legacy import quill_api as quill
 import email
 from email.utils import getaddresses, parseaddr
 from email.mime.text import MIMEText
 import smtplib
 from flanker import mime
-from web import app
+from faqbot.legacy.web import app
 
 import imaplib2, time
 from threading import *
-import email_finder
+from faqbot.legacy import email_finder
 
 import pickle
-from commands import *
+from faqbot.legacy.commands import *
 
 class Idler(object):
     def __init__(self, conn, last_id):
@@ -59,7 +59,7 @@ class Idler(object):
 
     # The method that gets called when a new email arrives.
     def dosync(self):
-        print "You\'ve Got Mail."
+        print("You've Got Mail.")
         did_except = True
         while did_except:
             try:
@@ -68,20 +68,22 @@ class Idler(object):
             except:
                 # Attempt reconnect
                 did_except = True
-                print "Disconnected, attempting reconnect."
+                print("Disconnected, attempting reconnect.")
                 self.mail = imaplib2.IMAP4_SSL(IMAP_SERVER)
                 self.mail.login(MAIL_USER, MAIL_PASSWORD)
 
                 self.mail.select("inbox", readonly=True)
 
         ids = data[0]
+        if isinstance(ids, bytes):
+            ids = ids.decode()
         id_list = ids.split()
         new_mail_ids = []
 
         if id_list[-1] < self.last_id:
             new_mail_ids = []
         else:
-            for i in xrange(len(id_list)-1, 0, -1):
+            for i in range(len(id_list)-1, 0, -1):
                 if id_list[i] == self.last_id:
                     break
                 else:
@@ -91,33 +93,43 @@ class Idler(object):
         for mail_id in new_mail_ids:
             result, data = self.mail.fetch(mail_id, "(RFC822)")
             # print data
-            raw_email = "null"
+            raw_email = None
             for d in data:
                 if type(d) is tuple:
-                    if "RFC822" in d[0]:
+                    header = d[0]
+                    if isinstance(header, bytes):
+                        header = header.decode()
+                    if "RFC822" in header:
                         raw_email = d[1]
 
-            if raw_email == "null":
+            if raw_email is None:
                 continue
+
+            # Decode bytes from IMAP
+            if isinstance(raw_email, bytes):
+                raw_email = raw_email.decode('utf-8', errors='replace')
 
             email_message = email.message_from_string(raw_email)
             flanker_msg = mime.from_string(raw_email)
 
-            body = "null"
+            body = None
 
             try:
                 for part in flanker_msg.parts:
-                    if part.body.encode('ascii', 'ignore').startswith(TRIGGER):
-                        body = part.body.encode('ascii', 'ignore')
+                    if part.body.encode('ascii', 'ignore').decode('ascii').startswith(TRIGGER):
+                        body = part.body.encode('ascii', 'ignore').decode('ascii')
                         break
             except Exception as e:
                 pass
 
-            # If body is still null, just look for this stuff
-            if body == "null":
+            # If body is still None, just look for this stuff
+            if body is None:
                 for l in raw_email.split('\n'):
                     if l.startswith(TRIGGER):
                         body = l
+
+            if body is None:
+                continue
 
             # CR-LF ugh
             body = body.replace('\r', '')
@@ -142,7 +154,7 @@ class Idler(object):
                 else:
                     command = "faq"
 
-                print "Request from {} for subject {} with command {}.".format(email_message["From"], email_message["Subject"], command)
+                print("Request from {} for subject {} with command {}.".format(email_message["From"], email_message["Subject"], command))
                 tos = email_message.get_all('to', [])
                 ccs = email_message.get_all('cc', [])
                 all_recipients = getaddresses(tos + ccs) + [parseaddr(email_message["Reply-To"] or email_message["From"])]
@@ -151,8 +163,8 @@ class Idler(object):
                     lines = body.strip().split('\n')
                     new_command = lines[0].split()[2]
                     content = '<br>\n'.join(lines[1:])
-                    print 'Request from {} for new command {} with body:'.format(email_message["From"], new_command)
-                    print content
+                    print('Request from {} for new command {} with body:'.format(email_message["From"], new_command))
+                    print(content)
                     COMMANDS[new_command] = content
                     save_commands(COMMANDS)
                     return
@@ -169,7 +181,7 @@ class Idler(object):
                     if not wl_email:
                         return
 
-                    print "Whitelist Email:", wl_email
+                    print("Whitelist Email:", wl_email)
 
                     # Post to quill
                     quill.post_wl(quill.get_wl() + [wl_email])
@@ -191,7 +203,7 @@ class Idler(object):
                 # Remove dupes
                 recipients = list(set(recipients))
 
-                print recipients
+                print(recipients)
 
                 msg = MIMEText(content, 'html')
                 msg['Subject'] = reply_sujet
@@ -219,6 +231,8 @@ mail.select("[Gmail]/All Mail", readonly=True)
 result, data = mail.search(None, "ALL")
 
 ids = data[0]
+if isinstance(ids, bytes):
+    ids = ids.decode()
 id_list = ids.split()
 latest_email_id = id_list[-1]
 
@@ -227,7 +241,7 @@ COMMANDS = load_commands()
 idler = Idler(mail, latest_email_id)
 idler.start()
 
-print "Client started on {}, waiting for emails.".format(MAIL_USER)
+print("Client started on {}, waiting for emails.".format(MAIL_USER))
 
 # while True:
 #     try:

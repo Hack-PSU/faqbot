@@ -14,6 +14,6 @@ while True:
 	time.sleep(DELAY)
 
 	if DEBUG:
-		print "Killing {}".format(p.pid)
+		print("Killing {}".format(p.pid))
 
 	p.kill()

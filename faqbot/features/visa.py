@@ -51,7 +51,7 @@ if os.path.exists('faqbot/static/visa'):
         def triggered_callback(body, argv, reply_object):
             if len(argv) >= 5:
                 if argv[1] == 'visa':
-                    print "Processing visa request!"
+                    print("Processing visa request!")
                     firstame = argv[2]
                     lastname = argv[3]
                     country = argv[4]

@@ -12,7 +12,7 @@ from faqbot.core.store import gen_defaults, load_config, Store
 
 from flask import request, render_template, redirect, url_for
 from dkim import dkim_verify, arc_verify
-from email import message_from_string
+from email import message_from_bytes
 from email.utils import parseaddr
 
 DEFAULTS = {"enabled": False, "whitelist": []}
@@ -55,12 +55,16 @@ def is_whitelisted_internal(body, whitelist=[]):
     figure out of any of the callbacks must be triggered or not. This hook
     will not be called for any other feature.
     """
+    # Ensure body is bytes for DKIM verification
+    if isinstance(body, str):
+        body = body.encode('utf-8')
+
     # Let's make sure no spoofing is happening.
     if not (dkim_verify(body) or arc_verify(body)):
-        print "No DKIM"
+        print("No DKIM")
         return False
 
-    parsed = message_from_string(body)
+    parsed = message_from_bytes(body)
     from_address = parsed["From"]
     _, address = parseaddr(from_address)
     

@@ -1,0 +1,9 @@
+services:
+  faqbot:
+    build: .
+    ports:
+      - "8114:8114"
+    volumes:
+      - ./store:/app/store
+      - ./faqbot/config.py:/app/faqbot/config.py:ro
+    restart: unless-stopped

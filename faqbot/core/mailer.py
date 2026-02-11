@@ -26,7 +26,7 @@ def undo_base64(re):
 
     base64_contents = ''.join(valid_lines)
     
-    return str(base64.b64decode(base64_contents).decode('ascii', 'ignore').encode('ascii', 'ignore'))
+    return base64.b64decode(base64_contents).decode('ascii', 'ignore')
 
 def init_finder(re):
     if 'Content-Transfer-Encoding: base64' in re:
@@ -52,7 +52,7 @@ def init_finder(re):
 
     return recipients
 
-def reply_email(reply_object, body, attach=None, attach_fn="file.pdf", reply_one=None):
+def reply_email(reply_object, body, attach=None, attach_fn="file.pdf", reply_one=None, from_addr=None):
     sujet = reply_object['subject']
     reply_sujet = "Re: " + sujet if not sujet.startswith('Re:') else sujet
     recipients = []
@@ -62,7 +62,7 @@ def reply_email(reply_object, body, attach=None, attach_fn="file.pdf", reply_one
     re = reply_object['raw_email']
     recipients += init_finder(re)
 
-    print recipients
+    print(recipients)
 
     if attach is None:
         msg = MIMEText(body + FOOTER, 'html')
@@ -84,9 +84,10 @@ def reply_email(reply_object, body, attach=None, attach_fn="file.pdf", reply_one
     else:
         msg["To"] = ", ".join(recipients)
 
-    msg["From"] = MAIL_FROM
+    sender = from_addr or MAIL_FROM
+    msg["From"] = sender
 
     s = smtplib.SMTP_SSL(*SMTP_SERVER)
     s.login(SEND_MAIL_USER, SEND_MAIL_PASSWORD)
-    s.sendmail(MAIL_FROM, recipients, msg.as_string())
+    s.sendmail(sender, recipients, msg.as_string())
     s.quit()

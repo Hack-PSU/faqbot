@@ -1,5 +1,5 @@
-from config import *
-from commands import *
+from faqbot.config import *
+from faqbot.legacy.commands import *
 
 from flask import Flask, render_template, request
 

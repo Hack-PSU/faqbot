@@ -3,7 +3,8 @@ FAQ = """
 """
 
 COMMANDS = {
-    "edu": """
+    "edu": {
+        "body": """
 
     Hi! <br><br>
 
@@ -17,7 +18,10 @@ COMMANDS = {
     Hackbot
 
     """,
-    "whitelist": """
+        "from_email": ""
+    },
+    "whitelist": {
+        "body": """
 
     Hi! <br><br>
 
@@ -27,7 +31,10 @@ COMMANDS = {
     Hackbot
 
     """,
-    "mixed": """
+        "from_email": ""
+    },
+    "mixed": {
+        "body": """
 
     Hi! <br><br>
 
@@ -39,7 +46,10 @@ COMMANDS = {
     Hackbot
 
     """,
-    "lateteam": """
+        "from_email": ""
+    },
+    "lateteam": {
+        "body": """
     Hi, <br><br>
 
     Thanks for reaching out! Unfortunately registration is now closed and we cannot make changes to teams. The good news is this only affects admissions. So, if everyone gets admitted, you are welcome to hack together at the event! <br><br>
@@ -47,7 +57,10 @@ COMMANDS = {
     Cheers,<br>
     Hackbot
     """,
-    "latereg": """
+        "from_email": ""
+    },
+    "latereg": {
+        "body": """
     Hi, <br><br>
 
     Thanks for reaching out! Unfortunately registration is now closed. We had 24-hour grace period for stragglers, but now that that period is over, we have begun the admissions process and cannot accept any more applications. <br><br>
@@ -59,7 +72,10 @@ COMMANDS = {
     Cheers,<br>
     Hackbot
     """,
-    "lateconfirm": """
+        "from_email": ""
+    },
+    "lateconfirm": {
+        "body": """
     Hi, <br><br>
 
     Thanks for reaching out! Unfortunately the deadline for confirming your acceptance to HackMIT has passed. We had much more interest in HackMIT than we have space, so unfortunately cannot allow you to confirm your acceptance late. Sorry about that!<br><br>
@@ -69,16 +85,21 @@ COMMANDS = {
     Otherwise, look out for applications to HackMIT 2019 next year!<br><br>
 
     Cheers,<br>
-    Hackbot 
+    Hackbot
     """,
-    "travel": """
+        "from_email": ""
+    },
+    "travel": {
+        "body": """
     Hi there,<br><br>
-    
+
     We're processing travel reimbursements right now!<br>
     If you received an email confirming your reimbursement, you're all set.
     We'll email out when we mail all the checks.<br><br>
-    
+
     Best,<br>
     Hackbot
     """,
+        "from_email": ""
+    },
 }

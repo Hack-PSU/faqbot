@@ -12,7 +12,7 @@ def post_wl(lst, at, ep):
 	j = {'emails': lst}
 	r = requests.put(ep, headers=HEADERS, json=j)
 
-	print r.text
+	print(r.text)
 
 	if r.status_code == 200:
 		return True
@@ -21,4 +21,4 @@ def post_wl(lst, at, ep):
 
 
 if __name__ == "__main__":
-	print post_wl(get_wl() + ['shreyask@mit.edu'])
+	print(post_wl(get_wl() + ['shreyask@mit.edu']))

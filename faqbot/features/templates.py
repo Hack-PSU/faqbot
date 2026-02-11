@@ -29,8 +29,14 @@ class Templates(Feature):
 
             with Store(STORE) as s:
                 if command in s["templates"] and s["enabled"]:
-                    reply = s["templates"][command]
-                    reply_email(reply_object, reply)
+                    template = s["templates"][command]
+                    if isinstance(template, str):
+                        reply = template
+                        from_email = None
+                    else:
+                        reply = template["body"]
+                        from_email = template.get("from_email") or None
+                    reply_email(reply_object, reply, from_addr=from_email)
 
                     return
 
@@ -79,7 +85,11 @@ def set_template():
         return redirect(url_for("templates_panel"))
 
     with Store(STORE) as s:
-        s["templates"][key] = request.form.get("value")
+        from_email = request.form.get("from_email", "").strip()
+        s["templates"][key] = {
+            "body": request.form.get("value"),
+            "from_email": from_email
+        }
 
     return redirect(url_for("templates_panel"))
 

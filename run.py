@@ -30,11 +30,11 @@ while True:
     # Start the app.
 	p = subprocess.Popen(["python", "app.py"])
 	lasproc = p.pid
-	print '[Runner] Started at', p.pid
+	print('[Runner] Started at', p.pid)
 
 	time.sleep(DELAY) # Wait a minute.
 
 	if VERBOSE:
-		print "Killing {}".format(p.pid)
+		print("Killing {}".format(p.pid))
 
 	kill(p.pid) # KILL.

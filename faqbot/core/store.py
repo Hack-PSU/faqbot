@@ -21,7 +21,7 @@ def save_config(store, name):
     """Give it a dictionary of your config,
     and a name of your config and it'll save it ;)
     """
-    pickle.dump(store, open(store_path(name), "w"))
+    pickle.dump(store, open(store_path(name), "wb"))
 
 
 def load_config(name):
@@ -29,7 +29,7 @@ def load_config(name):
     Again, pass in the name of your config.
     """
 
-    return pickle.load(open(store_path(name)))
+    return pickle.load(open(store_path(name), "rb"))
 
 
 def gen_defaults(defaults, name):
